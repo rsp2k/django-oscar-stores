@@ -127,8 +127,9 @@ class OpeningPeriodFormset(BaseOpeningPeriodFormset):
 
     def __init__(self, weekday, data, instance=None):
         self.weekday = weekday
+        queryset = None
         if instance:
-            if instance.opening_periods:
+            if instance.opening_periods.exists():
                 queryset = instance.opening_periods.filter(
                     weekday=weekday
                 )
