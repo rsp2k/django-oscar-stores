@@ -127,14 +127,12 @@ class OpeningPeriodFormset(BaseOpeningPeriodFormset):
 
     def __init__(self, weekday, data, instance=None):
         self.weekday = weekday
-        queryset = None
+        queryset = OpeningPeriod.objects.none()
         if instance:
-            if instance.opening_periods.exists():
+            if instance.id:
                 queryset = instance.opening_periods.filter(
                     weekday=weekday
                 )
-        else:
-            queryset = OpeningPeriod.objects.none()
         prefix = 'day-%d' % weekday
 
         self.openform = IsOpenForm(data=data or None, prefix=prefix, initial={
@@ -144,6 +142,7 @@ class OpeningPeriodFormset(BaseOpeningPeriodFormset):
         self.open = self.openform['open']
 
         super().__init__(data=data, instance=instance, prefix=prefix, queryset=queryset)
+
 
     def get_weekday_display(self):
         return force_str(OpeningPeriod.WEEK_DAYS[self.weekday])
